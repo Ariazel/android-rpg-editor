@@ -12,13 +12,14 @@ public class Quest
 {
 	int id;
 	ArrayList<Quest> prereq;
-	String questGettingText, questSolvingText, questCompletedText;
+	String quest_getting_text, quest_solving_text, quest_completed_text;
+	boolean solved;
 
 	public Quest(ArrayList<Quest> prereq, String text)
 	{
 		this.prereq = prereq;
-		questGettingText = text;
-		questSolvingText = text;
-		questCompletedText = "";
+		quest_getting_text = text;
+		quest_solving_text = text;
+		quest_completed_text = "";
 	}
 }

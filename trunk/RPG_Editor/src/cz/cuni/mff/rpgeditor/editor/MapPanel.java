@@ -676,6 +676,18 @@ public class MapPanel extends JPanel implements Scrollable
 			Main.gui.leftPanel.miniMap.repaint();
 		}
 		
+		@Override
+		public void mouseClicked(MouseEvent e)
+		{
+			if (e.getClickCount() == 2)
+			{
+				if (Main.gui.selectedTool == GUI.Tool.SELECTION_TOOL)
+				{
+					// TODO: otevrit vlastnosti vybraneho objektu
+					
+				}
+			}
+		}
 		
 		class ExecutedTIntProcedure implements TIntProcedure
 		{
