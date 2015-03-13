@@ -1,31 +1,18 @@
 package cz.cuni.mff.rpgeditor.game;
 
+import java.awt.image.BufferedImage;
+
 
 /**
- * Trida reprezentujici nepritele. Kazdy nepritel ma svou povahu, podle ktere se
- * ridi.
+ * Trida reprezentujici nepritele, postavu utocici na hrace.
  */
-public class Enemy extends MapObject
+public class Enemy extends MovingObject
 {
-	int hp; // ...
-	int positionX, positionY;
-	boolean alive;
-	Behavior behavior;
+	int hp, speed; // TODO: dalsi vlastnosti
+	boolean is_alive;
 	
-	public Enemy(String lookPath)
+	public Enemy(BufferedImage look)
 	{
-		super(lookPath);
-	}
-}
-
-
-class Behavior
-{
-	int aggresivity; // ...
-
-
-	boolean shouldMove()
-	{
-		return true;
+		super(look);
 	}
 }

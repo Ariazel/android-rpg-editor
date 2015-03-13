@@ -10,7 +10,6 @@ public abstract class MapObject implements Cloneable
 {
 	public int id = -1;
 	public BufferedImage look;
-	public boolean visible = true;
 	
 	public MapObject(String lookPath)
 	{

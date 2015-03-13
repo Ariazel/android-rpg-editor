@@ -1,5 +1,6 @@
 package cz.cuni.mff.rpgeditor.editor;
 
+
 public class Main
 {
 	static GUI gui;

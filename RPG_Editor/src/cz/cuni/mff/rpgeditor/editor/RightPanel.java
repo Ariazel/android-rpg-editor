@@ -36,8 +36,8 @@ import cz.cuni.mff.rpgeditor.game.MapObject;
 
 
 /**
- * Pravy panel okna editoru. Na nem budou umisteny vsechny objekty, ktere pujde
- * pridavat do mapy - spojenci, nepratele, teren... Objekty budou do mapy
+ * Pravy panel okna editoru. Na nem jsou umisteny vsechny objekty, ktere jde
+ * pridavat do mapy - spojenci, nepratele, teren... Objekty jsou do mapy
  * pridavany tahem tlacitka mysi a naslednym umistenim do mapy.
  */
 public class RightPanel extends JPanel
