@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='us-ascii'?>
+
+<project basedir = "." default = "compile" name = "RPG_Editor">
+	<description>
+	</description>
+	
+	<target name = "init">
+		<mkdir dir = "bin"/>
+		<mkdir dir = "bin${file.separator}editor"/>
+	</target>
+	<target name = "compile" depends = "init" description = "Compile">
+		<javac debug = "true"
+			destdir = "bin"
+			srcdir = "src${file.separator}game"/>
+		<javac debug = "true"
+			destdir = "bin"
+			srcdir = "src${file.separator}editor"/>
+	</target>
+	<target name = "run" depends = "compile" description = "Execute">
+		<java fork = "true"
+			classname = "editor.Main"
+			classpath = "bin"/>
+	</target>
+</project>

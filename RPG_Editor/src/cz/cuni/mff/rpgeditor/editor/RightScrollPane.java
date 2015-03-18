@@ -1,23 +1,20 @@
 package cz.cuni.mff.rpgeditor.editor;
 
 import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
-
-import cz.cuni.mff.rpgeditor.editor.RightTabbedPane.Tab;
 
 public class RightScrollPane extends JScrollPane
 {
 	private static final long serialVersionUID = 1L;
 	
 	RightPanel rightPanel;
-	Tab tabType;
 
-	public RightScrollPane(Tab tab)
+	public RightScrollPane(List<MapObject> tab)
 	{
 		rightPanel = new RightPanel(tab);
-		tabType = tab;
 		setViewportView(rightPanel);
 		this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
 	}

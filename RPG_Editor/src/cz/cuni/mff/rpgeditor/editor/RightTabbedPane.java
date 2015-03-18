@@ -4,13 +4,14 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import cz.cuni.mff.rpgeditor.editor.RightPanel.TransferableMapObject;
-import cz.cuni.mff.rpgeditor.game.MapObject;
 
 /**
  * Komponenta pouzita v prave casti obrazovky, slouzici k zobrazeni objektu
@@ -24,9 +25,10 @@ public class RightTabbedPane extends JTabbedPane
 	
 	RightTabbedPane()
 	{
-		for (Tab tab : Tab.values())
+		Map<String, List<MapObject>> tabs = ObjectsLoader.loadMapObjects();
+		for (Map.Entry<String, List<MapObject>> tab : tabs.entrySet())
 		{
-			addTab(tab.name, new RightScrollPane(tab));
+			addTab(tab.getKey(), new RightScrollPane(tab.getValue()));
 		}
 		
 		currentTab = (RightScrollPane)getComponentAt(0);
@@ -87,32 +89,6 @@ public class RightTabbedPane extends JTabbedPane
 			catch (UnsupportedFlavorException e)
 			{
 				throw new Error("Cannot get transfered map object, unsupported flavor exception.");
-			}
-		}
-	}
-	
-	enum Tab
-	{
-		ALLIES("Allies", "objects/allies", "cz.cuni.mff.rpgeditor.game.Ally"),
-		ENEMIES("Enemies", "objects/enemies", "cz.cuni.mff.rpgeditor.game.Enemy"),
-		TERRAIN("Terrain objects", "objects/terrain_objects", "cz.cuni.mff.rpgeditor.game.TerrainObject");
-		
-		String name;
-		String path;
-		Class<? extends MapObject> mapObject;
-		
-		@SuppressWarnings("unchecked")
-		Tab(String name, String path, String objectClassName)
-		{
-			this.name = name;
-			this.path = path;
-			try
-			{
-				mapObject = (Class<MapObject>) Class.forName(objectClassName);
-			}
-			catch (ClassNotFoundException e)
-			{
-				throw new Error("Class" + objectClassName + "not found.");
 			}
 		}
 	}

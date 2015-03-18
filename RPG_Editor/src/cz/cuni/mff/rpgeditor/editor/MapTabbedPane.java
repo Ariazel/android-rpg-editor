@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -20,8 +21,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicButtonUI;
-
-import cz.cuni.mff.rpgeditor.game.Map;
 
 
 /**
@@ -36,7 +35,9 @@ public class MapTabbedPane extends JTabbedPane
 	
 	MapTabbedPane()
 	{
-		for (Map map : Main.game.maps)
+		List<Map> maps = MapsLoader.loadMapsOnStartup();
+		
+		for (Map map : maps)
 		{
 			add(map);
 		}

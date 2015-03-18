@@ -12,8 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import cz.cuni.mff.rpgeditor.game.MapTile;
-
 
 /**
  * Tato nastaveni jsou zobrazena pod minimapou v leftPanelu. Jsou zobrazena ve

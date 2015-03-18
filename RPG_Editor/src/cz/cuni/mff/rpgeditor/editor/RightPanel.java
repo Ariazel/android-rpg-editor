@@ -23,16 +23,11 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
-
-import cz.cuni.mff.rpgeditor.editor.RightTabbedPane.Tab;
-import cz.cuni.mff.rpgeditor.game.MapObject;
 
 
 /**
@@ -44,49 +39,13 @@ public class RightPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	
-	public RightPanel(Tab tab)
+	public RightPanel(List<MapObject> tab)
 	{
 		setLayout(new RightPanelFlowLayout(FlowLayout.LEADING));
 		
-		String[] imagePaths = new File(tab.path).list();
-		// jmena obrazku
-		for (int i = 0; i < imagePaths.length; ++i)
-		{	// cela cesta k obrazku
-			String s = tab.path + "/" + imagePaths[i]; 
-			imagePaths[i] = s;
-		}
-		
-		for (int i = 0; i < imagePaths.length; ++i)
+		for (MapObject object_to_add : tab)
 		{
-			// tvorba objektu typu daneho v enumu Tab dediciho
-			// od tridy MapObject:
-			MapObject mapObject = null;
-			
-			try
-			{
-				Constructor<? extends MapObject> ctor = tab.mapObject
-						.getDeclaredConstructor(String.class);
-				ctor.setAccessible(true);
-				mapObject = ctor.newInstance(imagePaths[i]);
-			}
-			catch (InstantiationException e)
-			{
-				e.printStackTrace();
-			}
-			catch (IllegalAccessException e)
-			{
-				e.printStackTrace();
-			}
-			catch (InvocationTargetException e)
-			{
-				e.printStackTrace();
-			}
-			catch (NoSuchMethodException e)
-			{
-				e.printStackTrace();
-			}
-			
-			MapObjectJLabel mapObjectLabel = new MapObjectJLabel(mapObject);
+			MapObjectJLabel mapObjectLabel = new MapObjectJLabel(object_to_add);
 			add(mapObjectLabel);
 			
 			DragSource ds = DragSource.getDefaultDragSource();
@@ -187,17 +146,17 @@ public class RightPanel extends JPanel
 			try
 			{
 				Transferable tr = event.getTransferable();
-				MapObject mapObject = (MapObject) tr.getTransferData(mapObjectFlavor);
+				MapObject map_object = (MapObject) tr.getTransferData(mapObjectFlavor);
 
 				if (event.isDataFlavorSupported(mapObjectFlavor))
 				{
 					event.acceptDrop(DnDConstants.ACTION_COPY);
 					
 					Point dropLoc = event.getLocation();
-					dropLoc.y += (mapObject.look.getHeight() / 2);
+					dropLoc.y += (map_object.look_on_map.getHeight() / 2);
 					// objekt je drzen veprostred, ale chyta se spodkem obrazku
 					
-					new ObjectAddition(dropLoc, mapObject);
+					new ObjectAddition(dropLoc, map_object);
 					
 					event.dropComplete(true);
 					return;
@@ -266,7 +225,7 @@ class MapObjectJLabel extends JLabel
 	@Override
 	public void paintComponent(Graphics g)
 	{
-		BufferedImage image = mapObject.look;
+		BufferedImage image = mapObject.look_on_map;
 		
 		int x = 0;
 		int y = 0;

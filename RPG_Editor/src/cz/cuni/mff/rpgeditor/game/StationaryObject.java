@@ -10,8 +10,14 @@ import java.awt.image.BufferedImage;
  */
 public class StationaryObject extends GameObject
 {
-	public StationaryObject(BufferedImage look)
+	public StationaryObject(BufferedImage[] graphics_frames)
 	{
-		super(look);
+		super(graphics_frames);
+	}
+	
+	@Override
+	public GameObject createDefaultCopy()
+	{
+		return new StationaryObject(graphics_frames);
 	}
 }

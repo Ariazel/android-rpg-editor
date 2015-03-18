@@ -4,13 +4,18 @@ import java.awt.image.BufferedImage;
 
 public abstract class GameObject
 {
-	// grafika objektu
-	public BufferedImage look;
+	// animovana grafika objektu ve hre
+	public BufferedImage[] graphics_frames;
 	// hrac (ne)muze projit skrz tento objekt
 	boolean has_colision;
 	
-	public GameObject(BufferedImage look)
+	public GameObject(BufferedImage[] graphics_frames)
 	{
-		this.look = look;
+		this.graphics_frames = graphics_frames;
+	}
+	
+	public GameObject createDefaultCopy()
+	{
+		return null;
 	}
 }

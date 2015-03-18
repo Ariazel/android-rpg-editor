@@ -13,10 +13,16 @@ public class MovingObject extends GameObject
 	// objekt je v blizkosti hrace a tedy aktivni (hybe se/utoci)
 	boolean is_active;
 	// TODO: dva skripty, jeden na pohyb a jeden na utok, reference ulozene zde
-	BufferedImage[] frames;
 	
-	public MovingObject(BufferedImage look)
+	public MovingObject(BufferedImage[] graphics_frames)
 	{
-		super(look);
+		super(graphics_frames);
+		// TODO: look_game je jeden velky obrazek s jednotlivymi natocenimi a animacemi, rozdelit do frames
+	}
+	
+	@Override
+	public GameObject createDefaultCopy()
+	{
+		return new MovingObject(graphics_frames);
 	}
 }
