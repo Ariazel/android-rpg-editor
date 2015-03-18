@@ -1,4 +1,4 @@
-package cz.cuni.mff.rpgeditor.game;
+package cz.cuni.mff.rpgeditor.editor;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -15,21 +15,12 @@ public class MapTile
 	public static final int imageSizeWidth = 60;
 	public static final int imageSizeHeight = 30;
 	
-	/**
-	 * Index obrazku terenu, tyto obrazky jsou ulozene u typu terenu.
-	 */
+	// Index obrazku terenu, tyto obrazky jsou ulozene u typu terenu.
 	public int imageIndex;
 	// Typ terenu.
 	public TerrainType type;
-	/**
-	 * Objekt na policku. Mezi tyto objekty patri napriklad stromy, skaly, zdi a
-	 * dalsi struktury.
-	 */
-	public MapObject object = null;
-	/** Ally nebo enemy stojici na policku. */
-	public MapObject living = null;
-	/** Seznam predmetu lezicich na tomto policku. */
-	public ArrayList<MapObject> listOfItems = null;
+	// Objekt na policku. Mezi tyto se radi jak nehybne, tak pohyblive objekty.
+	public MapObject map_object = null;
 
 	MapTile(String name)
 	{

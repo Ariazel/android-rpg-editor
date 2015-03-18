@@ -4,9 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import cz.cuni.mff.rpgeditor.game.Map;
-import cz.cuni.mff.rpgeditor.game.MapObject;
-import cz.cuni.mff.rpgeditor.game.MapTile.TerrainType;
+import cz.cuni.mff.rpgeditor.editor.MapTile.TerrainType;
 
 
 /**
@@ -118,7 +116,7 @@ class TerrainChange implements Reversible
 		{
 			for (Point p : indices)
 			{
-				cz.cuni.mff.rpgeditor.game.MapTile tile = mapToChange.getTile(p.x, p.y);
+				cz.cuni.mff.rpgeditor.editor.MapTile tile = mapToChange.getTile(p.x, p.y);
 				TileTerrainChange ttc = new TileTerrainChange(tile.type, p.x, p.y);
 	
 				if (!ttc.oldType.equals(newType))
@@ -148,7 +146,7 @@ class ObjectAddition implements Reversible
 	MapObject addedObject;
 	private boolean changedSomething = false;
 
-	ObjectAddition(Point position, cz.cuni.mff.rpgeditor.game.MapObject addedObject)
+	ObjectAddition(Point position, MapObject addedObject)
 	{
 		this.position = position;
 		this.addedObject = addedObject;

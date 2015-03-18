@@ -15,8 +15,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import cz.cuni.mff.rpgeditor.game.Map;
-
 
 public class ActionController
 {
@@ -195,7 +193,6 @@ public class ActionController
 					return;
 
 				Map newMap = new Map(nameString, widthNum, heightNum);
-				Main.game.maps.add(newMap);
 				Main.gui.mapTabbedPane.add(newMap);
 				Main.gui.mapTabbedPane.setSelectedIndex(Main.gui.mapTabbedPane.getTabCount() - 1);
 				//TODO: New map prida tab, new game vymeni stare taby za jeden novy

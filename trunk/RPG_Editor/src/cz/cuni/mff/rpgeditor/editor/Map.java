@@ -1,19 +1,17 @@
-package cz.cuni.mff.rpgeditor.game;
+package cz.cuni.mff.rpgeditor.editor;
 
-//import cz.cuni.mff.rpgeditor.editor.MapTile;
 
 /**
- * Reprezentace mapy ve hre. Mapa je dvourozmerne pole jednotlivych policek.
+ * Reprezentace mapy v editoru. Mapa je dvourozmerne pole jednotlivych policek.
  */
-// TODO: all
 public class Map
 {
-/*	String name;
+	String name;
 	int width, height;
 	private MapTile[][] map;
-	
-	public int currentId = 0;
+
 	// id, ktere je pouzito pri pridani dalsiho objektu na mapu
+	private int currentId = 0;
 		
 	public Map(String name, int width, int height)
 	{
@@ -66,25 +64,34 @@ public class Map
 	 * @param object Objekt, ktery ma byt pridan.
 	 * @return Prave pridany objekt s pridelenym id.
 	 */
-/*	public MapObject addMapObject(int x, int y, MapObject object)
+	public MapObject addMapObject(int x, int y, MapObject object)
 	{
 		MapTile tile = map[x][y];
-		if (tile.object != null)
+		if (tile.map_object != null)
 		{	// na policku uz je objekt, nelze pridat
 			throw new Error("Map tile already contains object.");
 		}
 		else
 		{
-			MapObject addedObject = (MapObject)object.clone();
+			MapObject addedObject = object.createDefaultCopy();
 			
 			if (!addedObject.idIsSet())
 			{
 				addedObject.setId(currentId++);
 			}
-			map[x][y].object = addedObject;
+			map[x][y].map_object = addedObject;
 			
 			return addedObject;
 		}
 	}
-*/
+	
+	public void removeMapObject(int x, int y)
+	{
+		map[x][y].map_object = null;
+	}
+
+	public void changeTerrainType(int x, int y, MapTile.TerrainType type)
+	{
+		map[x][y].changeTerrainType(type);
+	}
 }

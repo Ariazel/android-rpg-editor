@@ -14,9 +14,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
-import cz.cuni.mff.rpgeditor.game.Map;
-import cz.cuni.mff.rpgeditor.game.MapTile;
-
 
 class MiniMap extends JPanel implements MouseListener, MouseMotionListener
 {

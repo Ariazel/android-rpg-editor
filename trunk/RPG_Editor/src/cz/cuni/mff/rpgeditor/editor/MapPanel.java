@@ -23,10 +23,6 @@ import javax.swing.SwingConstants;
 import com.infomatiq.jsi.SpatialIndex;
 import com.infomatiq.jsi.rtree.RTree;
 
-import cz.cuni.mff.rpgeditor.game.Map;
-import cz.cuni.mff.rpgeditor.game.MapObject;
-import cz.cuni.mff.rpgeditor.game.MapTile;
-
 
 /**
  * Trida slouzici k vykresleni mapy v editoru.
@@ -35,7 +31,7 @@ public class MapPanel extends JPanel implements Scrollable
 {
 	private static final long serialVersionUID = 1L;
 	
-	protected cz.cuni.mff.rpgeditor.game.Map map;
+	protected Map map;
 	// mapa vykreslena na tomto panelu
 	final int heightOfSkyImage = 256;
 	// urcuje posun mapy od horni hrany teto komponenty (kvuli obloze)
@@ -242,7 +238,7 @@ public class MapPanel extends JPanel implements Scrollable
 		{
 			for (int x = 0; x < map.getWidth(); ++x)
 			{
-				MapObject object = map.getTile(x, y).object;
+				MapObject object = map.getTile(x, y).map_object;
 				paintTileObject(g, x, y, object);
 				
 				if (y == selectedY && x == selectedX)
@@ -269,11 +265,11 @@ public class MapPanel extends JPanel implements Scrollable
 		}
 
 		Rectangle objectRect = getObjectRectangle(x, y, object);
-		g.drawImage(object.look,
+		g.drawImage(object.look_on_map,
 				objectRect.x, objectRect.y,
 				objectRect.x + objectRect.width, objectRect.y + objectRect.height,
 				0, 0,
-				object.look.getWidth(), object.look.getHeight(),
+				object.look_on_map.getWidth(), object.look_on_map.getHeight(),
 				null);
 	}
 	
@@ -308,7 +304,7 @@ public class MapPanel extends JPanel implements Scrollable
 			throw new Error("Two objects being dragged at once.");
 		}
 		
-		BufferedImage image = objectToPaint.look;
+		BufferedImage image = objectToPaint.look_on_map;
 		
 		Point mousePos = getMousePosition();
 		
@@ -550,7 +546,7 @@ public class MapPanel extends JPanel implements Scrollable
 			return false;
 		}
 		
-		if (map.getTile(coords.x, coords.y).object != null)
+		if (map.getTile(coords.x, coords.y).map_object != null)
 		{
 			return false;
 		}
@@ -580,7 +576,7 @@ public class MapPanel extends JPanel implements Scrollable
 			return null;
 		}
 
-		MapObject objectToRemove = map.getTile(coords.x, coords.y).object;
+		MapObject objectToRemove = map.getTile(coords.x, coords.y).map_object;
 		
 		if (objectToRemove == null)
 		{	// na policku zadny objekt neni
@@ -608,7 +604,7 @@ public class MapPanel extends JPanel implements Scrollable
 			center.x += MapTile.imageSizeWidth / 2;
 		}
 		
-		BufferedImage look = object.look;
+		BufferedImage look = object.look_on_map;
 		int leftTopX = center.x - look.getWidth() / 2;
 		int leftTopY = center.y - look.getHeight();
 
@@ -727,7 +723,7 @@ public class MapPanel extends JPanel implements Scrollable
 				if (draggedObject != null)
 				{
 					Point newPosition = e.getPoint();
-					newPosition.y += draggedObject.look.getHeight() / 2;
+					newPosition.y += draggedObject.look_on_map.getHeight() / 2;
 					// objekt je drzen vprostred, ale ma byt pridan na policko vespod					
 					new ObjectMovement(draggedObjectPos, newPosition, draggedObject);
 					draggedObject = null;
@@ -776,7 +772,7 @@ public class MapPanel extends JPanel implements Scrollable
 					draggedObjectPos = selectedObjectPos;
 					
 					Point selectedObjectCoords = pointToCoords(selectedObjectPos);
-					draggedObject = map.getTile(selectedObjectCoords.x, selectedObjectCoords.y).object;
+					draggedObject = map.getTile(selectedObjectCoords.x, selectedObjectCoords.y).map_object;
 					
 					selectedObjectPos = null;
 					mousePressedPoint = null;

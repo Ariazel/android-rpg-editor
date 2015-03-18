@@ -103,7 +103,7 @@ public class Loader
 				}
 
 
-				if (line.startsWith("text1="))
+/*				if (line.startsWith("text1="))
 					currentQuest.questGettingText = line.substring(6);
 				else
 					throw new DataFormatException(
@@ -128,7 +128,7 @@ public class Loader
 				else
 					throw new DataFormatException(
 							"Wrong format of file allies.cfg");
-
+*/
 
 				if ((line = in.readLine()) == null)
 					throw new DataFormatException(

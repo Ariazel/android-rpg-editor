@@ -13,8 +13,8 @@ public class Ally extends MovingObject
 	String name;
 	ArrayList<Quest> questsToGive;
 
-	public Ally(BufferedImage look)
+	public Ally(BufferedImage[] graphics)
 	{
-		super(look);
+		super(graphics);
 	}
 }

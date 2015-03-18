@@ -4,8 +4,6 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JScrollPane;
 
-import cz.cuni.mff.rpgeditor.game.Map;
-
 public class MapScrollPane extends JScrollPane
 {
 	private static final long serialVersionUID = 1L;
