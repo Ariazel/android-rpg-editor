@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
  */
 public class Enemy extends MovingObject
 {
-	int hp, speed; // TODO: dalsi vlastnosti
+	int hp, speed; // TODO: dalsi vlastnosti + skripty utoku
 	boolean is_alive;
 	
 	public Enemy(BufferedImage[] graphics)

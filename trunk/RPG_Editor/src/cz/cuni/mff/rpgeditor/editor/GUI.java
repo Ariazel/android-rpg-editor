@@ -41,28 +41,28 @@ public class GUI
 		});
 	}
 
-	Menu menu = new Menu();
-	ToolBar toolBar = new ToolBar();
-	LeftPanel leftPanel = new LeftPanel();
-	MapTabbedPane mapTabbedPane = new MapTabbedPane();
-	RightTabbedPane rightTabbedPane = new RightTabbedPane();
+	final JFrame mainFrame = new JFrame();
+	final Menu menu = new Menu();
+	final ToolBar toolBar = new ToolBar();
+	final LeftPanel leftPanel = new LeftPanel();
+	final MapTabbedPane mapTabbedPane = new MapTabbedPane();
+	final RightTabbedPane rightTabbedPane = new RightTabbedPane();
 
-	JSplitPane splitMapRight = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+	final JSplitPane splitMapRight = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 			mapTabbedPane, rightTabbedPane);;
 	// rozdeluje panel s mapou a pravy panel
 
 	StatusBar statusBar = new StatusBar();
 	
 	void createAndShowGUI()
-	{
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Container pane = frame.getContentPane();
-		pane.setLayout(new GridBagLayout());
+	{		
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Container pane = mainFrame.getContentPane();
+		pane.setLayout(new GridBagLayout());		
 
 		GridBagConstraints c = new GridBagConstraints();
 
-		frame.setJMenuBar(menu);
+		mainFrame.setJMenuBar(menu);
 
 		c.fill = GridBagConstraints.BOTH;
 		c.gridwidth = GridBagConstraints.REMAINDER;
@@ -83,9 +83,9 @@ public class GUI
 		c.gridheight = GridBagConstraints.REMAINDER;
 		pane.add(statusBar, c);
 
-		frame.setPreferredSize(new Dimension(1024, 768));
-		frame.pack();
-		frame.setVisible(true);
+		mainFrame.setPreferredSize(new Dimension(1024, 768));
+		mainFrame.pack();
+		mainFrame.setVisible(true);
 
 		// nastaveni oddelovace podle preferovane sirky praveho panelu:
 		splitMapRight.setDividerLocation(splitMapRight.getSize().width

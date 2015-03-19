@@ -33,7 +33,6 @@ class ObjectsLoader
 	
 	static Map<String, List<MapObject>> loadMapObjects()
 	{
-		// TODO: konfiguracni soubor
 		Map<String, List<MapObject>> map_objects_groups = new HashMap<>();
 		// struktura, ve ktere jsou ulozeny jmena zalozek + seznam objektu v pravem panelu
 		
