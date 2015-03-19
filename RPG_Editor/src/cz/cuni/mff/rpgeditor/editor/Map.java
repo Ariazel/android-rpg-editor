@@ -1,5 +1,7 @@
 package cz.cuni.mff.rpgeditor.editor;
 
+import java.awt.Point;
+
 
 /**
  * Reprezentace mapy v editoru. Mapa je dvourozmerne pole jednotlivych policek.
@@ -55,6 +57,11 @@ public class Map
 	public MapTile getTile(int x, int y)
 	{
 		return map[x][y];
+	}
+	
+	public MapTile getTile(Point p)
+	{
+		return getTile(p.x, p.y);
 	}
 	
 	/**

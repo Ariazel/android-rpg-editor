@@ -218,22 +218,15 @@ public class MapPanel extends JPanel implements Scrollable
 		}
 	}
 	
-	Point selectedObjectPos = null;
+	//Point selectedObjectPos = null;
+	MapObject selected_object;
+	Point selected_object_position;
 	/**
 	 * Vykresli objekty na mape.
 	 * @param g Grafika pouzita ke kresleni.
 	 */
 	private void paintMapObjects(Graphics g)
-	{
-		int selectedX = -1;	// souradnice vybraneho objektu inicializovane na -1, aby nedoslo
-		int selectedY = -1;	// ke shode v cyklu v pripade, ze nebude vybrany zadny objekt
-		if (selectedObjectPos != null)
-		{
-			Point selectedObjectCoords = pointToCoords(selectedObjectPos);
-			selectedX = selectedObjectCoords.x;
-			selectedY = selectedObjectCoords.y;
-		}
-		
+	{		
 		for (int y = 0; y < map.getHeight(); ++y)
 		{
 			for (int x = 0; x < map.getWidth(); ++x)
@@ -241,11 +234,10 @@ public class MapPanel extends JPanel implements Scrollable
 				MapObject object = map.getTile(x, y).map_object;
 				paintTileObject(g, x, y, object);
 				
-				if (y == selectedY && x == selectedX)
+				if (object != null && object.equals(selected_object))
 				{
 					Rectangle objectRect = getObjectRectangle(x, y, object);
 					g.drawRect(objectRect.x, objectRect.y, objectRect.width, objectRect.height);
-
 				}
 			}
 		}
@@ -273,8 +265,8 @@ public class MapPanel extends JPanel implements Scrollable
 				null);
 	}
 	
-	MapObject draggedObject = null;
-	Point draggedObjectPos = null;
+	MapObject dragged_object = null;
+	Point dragged_object_old_position = null;
 	// pokud je objekt presouvan, je zde ulozena jeho stara pozice v pixelech a udaje o nem
 	
 	/**
@@ -293,9 +285,9 @@ public class MapPanel extends JPanel implements Scrollable
 		MapObject objectToPaint;
 		if (addedMapObject == null)
 		{
-			objectToPaint = draggedObject;
+			objectToPaint = dragged_object;
 		}
-		else if (draggedObject == null)
+		else if (dragged_object == null)
 		{
 			objectToPaint = addedMapObject;
 		}
@@ -329,7 +321,7 @@ public class MapPanel extends JPanel implements Scrollable
 	private boolean objectIsDragged()
 	{
 		MapObject addedMapObject = Main.gui.rightTabbedPane.getTransferedMapObject();
-		if (addedMapObject == null && draggedObject == null)
+		if (addedMapObject == null && dragged_object == null)
 		{	// zadny objekt neni v DnD rezimu
 			return false;
 		}
@@ -653,7 +645,7 @@ public class MapPanel extends JPanel implements Scrollable
 				// vzdalenosti 0 od obdelniku)
 				if (proc.executed == false)
 				{	// bylo kliknuto mezi vsechny objekty
-					selectedObjectPos = null;
+					selected_object = null;
 				}
 			}
 			else if (Main.gui.selectedTool == GUI.Tool.TERRAIN_TOOL)
@@ -675,12 +667,11 @@ public class MapPanel extends JPanel implements Scrollable
 		@Override
 		public void mouseClicked(MouseEvent e)
 		{
-			if (e.getClickCount() == 2)
+			if (selected_object != null && e.getClickCount() == 2)
 			{
 				if (Main.gui.selectedTool == GUI.Tool.SELECTION_TOOL)
 				{
-					// TODO: otevrit vlastnosti vybraneho objektu
-					
+					new ObjectPropertiesDialog(selected_object);
 				}
 			}
 		}
@@ -698,14 +689,13 @@ public class MapPanel extends JPanel implements Scrollable
 						(int) (r.minX + (r.maxX - r.minX) / 2), (int) r.maxY);
 				
 
-				if (executed == true && selectedObjectPos.y < bottomMid.y)
-				{	// pokud se v miste kliknuti prekryva vice objektu, je vybrany
+				if (executed == false		// v miste kliknuti je jediny objekt
+						|| executed == true && selected_object_position.y < bottomMid.y)
+					// nebo pokud se v miste kliknuti prekryva vice objektu, je vybrany
 					// ten v popredi
-					selectedObjectPos = bottomMid;
-				}
-				else if (executed == false)
-				{ 	// v miste kliknuti je jediny objekt
-					selectedObjectPos = bottomMid;
+				{	
+					selected_object_position = bottomMid;
+					selected_object = map.getTile(pointToCoords(bottomMid)).map_object;
 				}
 
 				executed = true;
@@ -720,14 +710,14 @@ public class MapPanel extends JPanel implements Scrollable
 		{
 			if (Main.gui.selectedTool == GUI.Tool.SELECTION_TOOL)
 			{
-				if (draggedObject != null)
+				if (dragged_object != null)
 				{
 					Point newPosition = e.getPoint();
-					newPosition.y += draggedObject.look_on_map.getHeight() / 2;
+					newPosition.y += dragged_object.look_on_map.getHeight() / 2;
 					// objekt je drzen vprostred, ale ma byt pridan na policko vespod					
-					new ObjectMovement(draggedObjectPos, newPosition, draggedObject);
-					draggedObject = null;
-					draggedObjectPos = null;
+					new ObjectMovement(dragged_object_old_position, newPosition, dragged_object);
+					dragged_object = null;
+					dragged_object_old_position = null;
 				}
 			}
 			else if (Main.gui.selectedTool == GUI.Tool.TERRAIN_TOOL)
@@ -760,7 +750,7 @@ public class MapPanel extends JPanel implements Scrollable
 					return;
 				}
 				
-				if (selectedObjectPos == null)
+				if (selected_object == null)
 				{	// je tazeno mysi, ale na zacatku mys nebyla na zadnem objektu
 					return;
 				}
@@ -769,12 +759,12 @@ public class MapPanel extends JPanel implements Scrollable
 				
 				if (mousePressedPoint.distance(mousePos) > minDrag)
 				{
-					draggedObjectPos = selectedObjectPos;
+					dragged_object_old_position = selected_object_position;
 					
-					Point selectedObjectCoords = pointToCoords(selectedObjectPos);
-					draggedObject = map.getTile(selectedObjectCoords.x, selectedObjectCoords.y).map_object;
+					Point selectedObjectCoords = pointToCoords(selected_object_position);
+					dragged_object = map.getTile(selectedObjectCoords.x, selectedObjectCoords.y).map_object;
 					
-					selectedObjectPos = null;
+					selected_object_position = null;
 					mousePressedPoint = null;
 				}
 			}
