@@ -1,0 +1,1 @@
+Android RPG editor is a java application in which you can create and edit your own RPG and then pack it into '.apk' file.
