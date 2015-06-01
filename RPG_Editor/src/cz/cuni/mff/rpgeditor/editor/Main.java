@@ -1,6 +1,6 @@
 package cz.cuni.mff.rpgeditor.editor;
 
-
+// zkouska githubu
 public class Main
 {
 	static GUI gui;

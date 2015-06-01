@@ -60,7 +60,7 @@ public class ObjectPropertiesDialog extends JDialog
 		Insets insets = pane.getInsets();
 		Dimension size;
 				
-		JTextField[] values = new JTextField[PARAMS_COUNT];
+/*		JTextField[] values = new JTextField[PARAMS_COUNT];
 		for (int i = 0; i < PARAMS_COUNT; ++i)
 			values[i] = new JTextField();
 		
@@ -82,5 +82,6 @@ public class ObjectPropertiesDialog extends JDialog
         setVisible(true);	
 	}
 	
-	private 
+	private */
+}
 }
