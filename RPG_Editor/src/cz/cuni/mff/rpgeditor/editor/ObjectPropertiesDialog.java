@@ -16,6 +16,8 @@ import javax.swing.SwingUtilities;
 import cz.cuni.mff.rpgeditor.game.MovingObject;
 import cz.cuni.mff.rpgeditor.game.StationaryObject;
 
+// posledni zkouska gitu
+
 public class ObjectPropertiesDialog extends JDialog
 {
 	private static final long serialVersionUID = 1L;
