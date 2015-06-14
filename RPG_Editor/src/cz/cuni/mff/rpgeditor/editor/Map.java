@@ -9,6 +9,7 @@ import java.awt.Point;
 public class Map
 {
 	String name;
+	String filepath;	// cesta k souboru s mapou, pokud je ulozena
 	int width, height;
 	private MapTile[][] map;
 

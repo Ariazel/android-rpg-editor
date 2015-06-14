@@ -6,6 +6,11 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.InputVerifier;
@@ -14,6 +19,10 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import cz.cuni.mff.rpgeditor.game.GameObject;
+import cz.cuni.mff.rpgeditor.game.MovingObject;
+import cz.cuni.mff.rpgeditor.game.StationaryObject;
 
 
 public class ActionController
@@ -232,6 +241,78 @@ public class ActionController
 
 	}
 
+	/**
+	 * Ulozi mapu do souboru definovaneho v mape (filepath/name).
+	 * Mapa se uklada do binarniho souboru, kazde policko reprezentuji dva byty,
+	 * z toho 4 bity jsou typ terenu, zbylych dvanact je odkaz na objekt na policku.
+	 * @param map Mapa, ktera se ma ulozit.
+	 */
+	static void saveMap(Map map)
+	{
+		if (map.filepath == null)
+		{
+			saveMapAs(map);
+		}
+		
+		File f = new File(map.filepath + "/" + map.name + ".rpm");
+		try
+		{
+			DataOutputStream out = new DataOutputStream(new FileOutputStream(f));
+			if (!f.exists())
+			{
+				f.createNewFile();
+			}
+			
+			// velikost mapy v prvnich ctyrech bytech
+			out.writeByte(map.getWidth() / Byte.MAX_VALUE);
+			out.writeByte(map.getWidth() % Byte.MAX_VALUE);
+			
+			out.writeByte(map.getHeight() / Byte.MAX_VALUE);
+			out.writeByte(map.getHeight() % Byte.MAX_VALUE);
+			
+			for (int i = 0; i < map.getWidth(); ++i)
+			{
+				for (int j = 0; j < map.getHeight(); ++j)
+				{
+					MapTile tile = map.getTile(i, j);
+					int terrain_type = tile.type.ordinal();
+					
+					if (tile.map_object == null)
+					{
+						out.writeByte(terrain_type << 4);
+						out.writeByte(0);
+					}
+					else
+					{
+						// TODO: vymyslet, jak ulozit odkazy na objekty
+						GameObject tile_object = tile.map_object.game_object;
+						if (tile_object instanceof StationaryObject)
+						{	// stojici objekty nemaji nastaveni, proto se vyplati udrzovat
+							// pole vsech objektu a kontrolovat rovnost
+							
+						}
+						else if (tile_object instanceof MovingObject)
+						{	// kazdy pohyblivy objekt muze byt unikatni, vypati se ulozit
+							// vsechny pohylive objekty zvlast
+							
+						}
+					}
+				}
+			}
+			
+			out.close();
+		}
+		catch (IOException e)
+		{
+			
+		}
+	}
+	
+	static void saveMapAs(Map map)
+	{
+		// TODO: file chooser
+	}
+	
 	static void saveGame()
 	{
 		

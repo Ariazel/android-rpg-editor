@@ -14,8 +14,16 @@ public abstract class GameObject
 		this.graphics_frames = graphics_frames;
 	}
 	
-	public GameObject createDefaultCopy()
+	@Override
+	public boolean equals(Object o)
 	{
-		return null;
+		if (!o.getClass().equals(GameObject.class))
+		{
+			return false;
+		}
+		
+		return true;
 	}
+	
+	public abstract GameObject createDefaultCopy();
 }

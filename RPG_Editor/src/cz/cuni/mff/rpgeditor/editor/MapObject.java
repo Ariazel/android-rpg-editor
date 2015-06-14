@@ -12,6 +12,8 @@ public class MapObject
 	
 	public MapObject(BufferedImage look_on_map, GameObject game_object)
 	{
+		assert(game_object != null);
+		
 		this.look_on_map = look_on_map;
 		this.game_object = game_object;
 	}
@@ -30,18 +32,6 @@ public class MapObject
 		else
 		{
 			return true;
-		}
-	}
-	
-	public Object clone()
-	{
-		try
-		{
-			return super.clone();
-		}
-		catch (Exception e)
-		{
-			return null;
 		}
 	}
 	
