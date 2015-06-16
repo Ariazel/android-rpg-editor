@@ -158,7 +158,7 @@ public class ObjectPropertiesDialog extends JDialog implements ActionListener
 	}
 	
 	private void initParamsPanel(JTextField[] params_tf)
-	{		
+	{		// TODO: upravit layout, aby neskakal pri zmene ally/enemy
 		PARAMS_PANEL.removeAll();
 		
 		GridBagConstraints c = new GridBagConstraints();

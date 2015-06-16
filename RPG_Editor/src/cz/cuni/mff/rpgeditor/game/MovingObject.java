@@ -1,13 +1,15 @@
 package cz.cuni.mff.rpgeditor.game;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 
 /**
  * Pohybujici se objekt ve hre - spojenec/nepritel/past
  */
-public class MovingObject extends GameObject 
+public class MovingObject extends GameObject implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	// souradnice pohybliveho objektu na mape
 	int coord_x, coord_y;
 	// objekt je v blizkosti hrace a tedy aktivni (hybe se/utoci)

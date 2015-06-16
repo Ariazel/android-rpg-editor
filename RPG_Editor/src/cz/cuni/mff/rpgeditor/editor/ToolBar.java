@@ -41,7 +41,7 @@ public class ToolBar extends JToolBar
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				ActionController.openMap();
+				ActionController.mapOpenDialog();
 			}
 		});
 

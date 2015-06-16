@@ -1,11 +1,14 @@
 package cz.cuni.mff.rpgeditor.editor;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 import cz.cuni.mff.rpgeditor.game.GameObject;
 
-public class MapObject
+public class MapObject implements Serializable
 {
+	private static final long serialVersionUID = 4L;
+	
 	BufferedImage look_on_map;
 	GameObject game_object;
 	public int id = -1;

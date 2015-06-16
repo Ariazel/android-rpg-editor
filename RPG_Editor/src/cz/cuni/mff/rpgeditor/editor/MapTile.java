@@ -20,7 +20,7 @@ public class MapTile
 	// Typ terenu.
 	public TerrainType type;
 	// Objekt na policku. Mezi tyto se radi jak nehybne, tak pohyblive objekty.
-	public MapObject map_object = null;
+	MapObject map_object = null;
 
 	MapTile(String name)
 	{
