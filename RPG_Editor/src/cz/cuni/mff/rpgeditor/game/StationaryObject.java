@@ -1,26 +1,23 @@
 package cz.cuni.mff.rpgeditor.game;
 
-import java.awt.image.BufferedImage;
-import java.io.Serializable;
-
 
 /**
  * Nehybny objekt na mape, napr. skaly a stromy.
  * Tento objekt si nepotrebuje udrzovat vlastni souradnice,
  * kazde pole ma v sobe ulozeny stacionarni objekt (pokud nejaky ma).
  */
-public class StationaryObject extends GameObject implements Serializable
+public class StationaryObject extends GameObject
 {
-	private static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = 1L;
 
-	public StationaryObject(BufferedImage[] graphics_frames)
+	public StationaryObject(String graphics_filepath)
 	{
-		super(graphics_frames);
+		super(graphics_filepath);
 	}
 	
 	@Override
-	public GameObject createDefaultCopy()
+	public Object clone()
 	{
-		return new StationaryObject(graphics_frames);
+		return new StationaryObject(graphics_filepath);
 	}
 }

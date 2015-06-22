@@ -12,9 +12,6 @@ public class Map
 	String filepath;	// cesta k souboru s mapou, pokud je ulozena
 	int width, height;
 	private MapTile[][] map;
-
-	// id, ktere je pouzito pri pridani dalsiho objektu na mapu
-	private int currentId = 0;
 		
 	public Map(String name, int width, int height)
 	{
@@ -81,15 +78,9 @@ public class Map
 		}
 		else
 		{
-			MapObject addedObject = object.createDefaultCopy();
+			map[x][y].map_object = (MapObject)object.clone();
 			
-			if (!addedObject.idIsSet())
-			{
-				addedObject.setId(currentId++);
-			}
-			map[x][y].map_object = addedObject;
-			
-			return addedObject;
+			return map[x][y].map_object;
 		}
 	}
 	

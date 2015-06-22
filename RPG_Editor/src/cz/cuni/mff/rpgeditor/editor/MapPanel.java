@@ -67,6 +67,11 @@ public class MapPanel extends JPanel implements Scrollable
 		}
 	}
 
+	String getMapName()
+	{
+		return map.name;
+	}
+	
 	/**
 	 * Metoda slouzici k vykresleni mapy v prostrednim panelu.
 	 */
@@ -98,7 +103,7 @@ public class MapPanel extends JPanel implements Scrollable
 	private void paintSky(Graphics g)
 	{		
 		java.awt.Image skyImage = null;
-		String pathOfSkyImage = "sky.gif";
+		String pathOfSkyImage = "res/sky.gif";
 		try
 		{
 			skyImage = ImageIO.read(new File(pathOfSkyImage));
@@ -208,7 +213,7 @@ public class MapPanel extends JPanel implements Scrollable
 			return;
 		}
 		
-		Point posOnMap = pointToCoords(mousePosition);
+		Point posOnMap = tileFromPixelCoords(mousePosition);
 
 		if (Main.gui.selectedTool == GUI.Tool.TERRAIN_TOOL)
 		{
@@ -218,7 +223,6 @@ public class MapPanel extends JPanel implements Scrollable
 		}
 	}
 	
-	//Point selectedObjectPos = null;
 	MapObject selected_object;
 	Point selected_object_position;
 	/**
@@ -307,7 +311,7 @@ public class MapPanel extends JPanel implements Scrollable
 		
 		mousePos.y += image.getHeight() / 2;
 		// objekt je drzen veprostred, ale prichytavat k polickam se ma spodek
-		Point coords = pointToCoords(mousePos);
+		Point coords = tileFromPixelCoords(mousePos);
 		
 		if (coords.x < 0 || coords.y < 0 || coords.x >= map.getWidth()
 				|| coords.y >= map.getHeight())
@@ -342,7 +346,7 @@ public class MapPanel extends JPanel implements Scrollable
 	 * @return Souradnice pole na mape, na kterem lezi bod, muze mit i zapornou
 	 *         hodnotu.
 	 */
-	private Point pointToCoords(Point p)
+	private Point tileFromPixelCoords(Point p)
 	{
 		if (p == null)
 		{
@@ -382,18 +386,19 @@ public class MapPanel extends JPanel implements Scrollable
 		return new Point(coordX, coordY);
 	}
 
+	
 	/**
 	 * Prevede seznam bodu zadanych v pixelech na souradnice policka na mape.
 	 * @param points Zadany seznam bodu.
 	 * @return Seznam souradnic policek.
 	 */
-	private LinkedList<Point> pointsToCoords(LinkedList<Point> points)
+	private LinkedList<Point> tilesFromPixelCoords(LinkedList<Point> points)
 	{
 		LinkedList<Point> result = new LinkedList<Point>();
 		
 		for (Point p : points)
 		{	// prevedeni vsech bodu zadanych v pixelech na souradnice policek na mape
-			Point coords = pointToCoords(p);
+			Point coords = tileFromPixelCoords(p);
 			if (!result.contains(coords))
 			{
 				result.add(coords);
@@ -528,30 +533,41 @@ public class MapPanel extends JPanel implements Scrollable
 	 *            Pridavany objekt.
 	 * @return Zda se operace pridani zdarila.
 	 */
+	boolean addMapObjectToPixelCoords(Point coords, MapObject object)
+	{
+		Point position = tileFromPixelCoords(coords);
+		
+		return addMapObject(position, object);
+	}
+	
+	/**
+	 * Prida objekt na policko na mape.
+	 * @param Position Souradnice pole, na ktere ma byt objekt pridan.
+	 * @param Object Objekt, ktery se ma pridat.
+	 * @return True, pokud bylo pridani objektu uspesne.
+	 */
 	boolean addMapObject(Point position, MapObject object)
 	{
-		Point coords = pointToCoords(position);
-		
-		if (coords.x < 0 || coords.y < 0 || coords.x >= map.getWidth()
-				|| coords.y >= map.getHeight())
+		if (position.x < 0 || position.y < 0 || position.x >= map.getWidth()
+				|| position.y >= map.getHeight())
 		{	// pokud jsou souradnice mimo mapu, neni mozne pridat objekt
 			return false;
 		}
 		
-		if (map.getTile(coords.x, coords.y).map_object != null)
+		if (map.getTile(position.x, position.y).map_object != null)
 		{
 			return false;
 		}
 		
-		MapObject addedObject = map.addMapObject(coords.x, coords.y, object);
+		MapObject addedObject = map.addMapObject(position.x, position.y, object);
 		
-		com.infomatiq.jsi.Rectangle addedObjectRect = getObjectRTreeRectangle(coords.x, coords.y, addedObject);
+		com.infomatiq.jsi.Rectangle addedObjectRect = getObjectRTreeRectangle(position.x, position.y, addedObject);
 		
 		objectRectangles.put(addedObject.id, addedObjectRect);
 		mapObjectsIndex.add(addedObjectRect, addedObject.id);
 		
 		return true;
-	}
+	}	
 	
 	/**
 	 * Odstrani objekt z mapy.
@@ -560,7 +576,7 @@ public class MapPanel extends JPanel implements Scrollable
 	 */
 	MapObject removeMapObject(Point position)
 	{
-		Point coords = Main.gui.mapTabbedPane.getDisplayedMapPanel().pointToCoords(position);
+		Point coords = Main.gui.mapTabbedPane.getDisplayedMapPanel().tileFromPixelCoords(position);
 		
 		if (coords.x < 0 || coords.y < 0 || coords.x >= map.getWidth()
 				|| coords.y >= map.getHeight())
@@ -650,7 +666,7 @@ public class MapPanel extends JPanel implements Scrollable
 			}
 			else if (Main.gui.selectedTool == GUI.Tool.TERRAIN_TOOL)
 			{
-				Point centre = pointToCoords(e.getPoint());
+				Point centre = tileFromPixelCoords(e.getPoint());
 				LinkedList<Point> selectedTiles = getSelectedTiles(
 						Main.gui.leftPanel.terrainSettings.brushSize, centre);
 
@@ -695,7 +711,7 @@ public class MapPanel extends JPanel implements Scrollable
 					// ten v popredi
 				{	
 					selected_object_position = bottomMid;
-					selected_object = map.getTile(pointToCoords(bottomMid)).map_object;
+					selected_object = map.getTile(tileFromPixelCoords(bottomMid)).map_object;
 				}
 
 				executed = true;
@@ -761,7 +777,7 @@ public class MapPanel extends JPanel implements Scrollable
 				{
 					dragged_object_old_position = selected_object_position;
 					
-					Point selectedObjectCoords = pointToCoords(selected_object_position);
+					Point selectedObjectCoords = tileFromPixelCoords(selected_object_position);
 					dragged_object = map.getTile(selectedObjectCoords.x, selectedObjectCoords.y).map_object;
 					
 					selected_object_position = null;
@@ -775,7 +791,7 @@ public class MapPanel extends JPanel implements Scrollable
 				LinkedList<Point> centres = getLineFromPoints(lastPosition,
 						e.getPoint());
 
-				LinkedList<Point> centreCoordsList = pointsToCoords(centres);
+				LinkedList<Point> centreCoordsList = tilesFromPixelCoords(centres);
 				// prevedeni vsech bodu zadanych v pixelech na souradnice
 				// policek na mape
 
@@ -810,7 +826,7 @@ public class MapPanel extends JPanel implements Scrollable
 		@Override
 		public void mouseMoved(MouseEvent e)
 		{
-			Point p = pointToCoords(e.getPoint());
+			Point p = tileFromPixelCoords(e.getPoint());
 			if (p == null || e.getY() < heightOfSkyImage)
 			{ // nic se ve stavovem radku nezobrazi
 				Main.gui.statusBar.showCurrentMousePosition(null);

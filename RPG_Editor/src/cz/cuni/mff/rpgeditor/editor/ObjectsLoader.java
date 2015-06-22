@@ -1,6 +1,5 @@
 package cz.cuni.mff.rpgeditor.editor;
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -10,10 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.DataFormatException;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
 
 import cz.cuni.mff.rpgeditor.game.GameObject;
 import cz.cuni.mff.rpgeditor.game.MovingObject;
@@ -60,19 +55,18 @@ class ObjectsLoader
 					GameObject gobject_to_add;
 					if (line_split[0].equals("STATIONARY"))
 					{
-						gobject_to_add = new StationaryObject(getGraphicsFrames(line_split[3], file_name));
+						gobject_to_add = new StationaryObject(line_split[3] + "/" + file_name + ".gif");
 					}
 					else if (line_split[0].equals("MOVING"))
 					{
-						gobject_to_add = new MovingObject(getGraphicsFrames(line_split[3], file_name));
+						gobject_to_add = new MovingObject(line_split[3] + "/" + file_name + ".gif");
 					}
 					else
 					{
 						throw new DataFormatException("Wrong format of file " + CONFIG_FILE_PATH);
 					}
 					
-					BufferedImage look_on_map = ImageIO.read(new File(line_split[2] + "/" + image_filenames[i]));
-					MapObject mo = new MapObject(look_on_map, gobject_to_add);
+					MapObject mo = new MapObject(line_split[2] + "/" + image_filenames[i], gobject_to_add);
 					map_objects.add(mo);
 				}
 				
@@ -102,28 +96,5 @@ class ObjectsLoader
 		}
 		
 		return map_objects_groups;
-	}
-	
-	private static BufferedImage[] getGraphicsFrames(String file_path, String file_name) throws IOException
-	{
-		return getGraphicsFramesFromFile(new File(file_path + "/" + file_name + ".gif"));
-	}
-	
-	private static BufferedImage[] getGraphicsFramesFromFile(File image) throws IOException
-	{
-		List<BufferedImage> frames = new ArrayList<>();
-		
-        ImageReader reader = (ImageReader)ImageIO.getImageReadersByFormatName("gif").next();
-        ImageInputStream ciis = ImageIO.createImageInputStream(image);
-        reader.setInput(ciis, false);   
-
-        int noi = reader.getNumImages(true);
-
-        for (int i = 0; i < noi; i++)
-        {
-            frames.add(reader.read(i));
-        }
-        
-        return frames.toArray(new BufferedImage[frames.size()]);
 	}
 }

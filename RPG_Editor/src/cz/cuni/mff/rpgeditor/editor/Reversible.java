@@ -163,7 +163,7 @@ class ObjectAddition implements Reversible
 	public void forward()
 	{
 		MapPanel p = Main.gui.mapTabbedPane.getDisplayedMapPanel();
-		changedSomething = p.addMapObject(position, addedObject);
+		changedSomething = p.addMapObjectToPixelCoords(position, addedObject);
 	}
 
 	@Override
@@ -212,12 +212,12 @@ class ObjectMovement implements Reversible
 		MapPanel p = Main.gui.mapTabbedPane.getDisplayedMapPanel();
 		
 		changedSomething = (p.removeMapObject(oldPosition) != null);
-		changedSomething &= p.addMapObject(newPosition, movedObject);
+		changedSomething &= p.addMapObjectToPixelCoords(newPosition, movedObject);
 		// pokud nevysla nektera z techto dvou operaci, je potreba vratit mapu
 		// do puvodniho stavu:
 		if (!changedSomething)
 		{
-			p.addMapObject(oldPosition, movedObject);
+			p.addMapObjectToPixelCoords(oldPosition, movedObject);
 		}
 	}
 
@@ -226,7 +226,7 @@ class ObjectMovement implements Reversible
 	{
 		MapPanel p = Main.gui.mapTabbedPane.getDisplayedMapPanel();
 		p.removeMapObject(newPosition);
-		p.addMapObject(oldPosition, movedObject);
+		p.addMapObjectToPixelCoords(oldPosition, movedObject);
 	}
 
 	@Override
@@ -273,7 +273,7 @@ class ObjectRemoval implements Reversible
 	public void reverse()
 	{
 		MapPanel p = Main.gui.mapTabbedPane.getDisplayedMapPanel();
-		p.addMapObject(position, removedObject);
+		p.addMapObjectToPixelCoords(position, removedObject);
 	}
 
 	@Override

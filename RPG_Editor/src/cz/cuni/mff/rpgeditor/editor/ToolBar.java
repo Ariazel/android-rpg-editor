@@ -41,15 +41,17 @@ public class ToolBar extends JToolBar
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				ActionController.mapOpenDialog();
+				MapPanel map_panel = ActionController.showMapOpenChooser();
+				if (map_panel != null)
+					Main.gui.mapTabbedPane.add(map_panel);
 			}
 		});
 
-		createButton("Save Game", "Save the game", new ActionListener()
+		createButton("Save Map", "Save the map", new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				ActionController.saveGame();
+				ActionController.saveMap(Main.gui.mapTabbedPane.getDisplayedMap());
 			}
 		});
 
@@ -103,6 +105,10 @@ public class ToolBar extends JToolBar
 			{
 				ActionController.changeTool(GUI.Tool.TERRAIN_TOOL);
 				Main.gui.leftPanel.terrainSettings.setVisible(true);
+				
+				MapPanel current_map_panel = Main.gui.mapTabbedPane.currentTab.mapPanel;
+				current_map_panel.selected_object = null;
+				current_map_panel.repaint();
 			}
 		});
 

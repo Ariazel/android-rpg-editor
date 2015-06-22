@@ -50,7 +50,7 @@ public class RightPanel extends JPanel
 			
 			DragSource ds = DragSource.getDefaultDragSource();
 			ds.createDefaultDragGestureRecognizer(mapObjectLabel,
-					DnDConstants.ACTION_COPY, new RightbjectDragGestureListener(
+					DnDConstants.ACTION_COPY, new RightObjectDragGestureListener(
 							new MapObjectDropTargetListener()));
 		}
 	}		
@@ -60,12 +60,12 @@ public class RightPanel extends JPanel
 	/**
 	 * Trida zajistujici zacatek dragu objektu.
 	 */
-	private class RightbjectDragGestureListener extends DragSourceAdapter
+	private class RightObjectDragGestureListener extends DragSourceAdapter
 			implements DragGestureListener
 	{
 		MapObjectDropTargetListener dropListener;
 		
-		public RightbjectDragGestureListener(MapObjectDropTargetListener dropListener)
+		public RightObjectDragGestureListener(MapObjectDropTargetListener dropListener)
 		{
 			this.dropListener = dropListener;
 		}
@@ -111,7 +111,7 @@ public class RightPanel extends JPanel
 		}
 		
 		@Override
-		public Object getTransferData(DataFlavor flavor)
+		public MapObject getTransferData(DataFlavor flavor)
 				throws UnsupportedFlavorException
 		{
 			if (flavor.equals(mapObjectFlavor))
@@ -146,7 +146,9 @@ public class RightPanel extends JPanel
 			try
 			{
 				Transferable tr = event.getTransferable();
-				MapObject map_object = (MapObject) tr.getTransferData(mapObjectFlavor);
+				
+				MapObject map_object = (MapObject)((MapObject)tr.getTransferData(mapObjectFlavor)).clone();
+				// v pravem panelu je original map objectu, je potreba vytvorit kopii s vlastnim id
 
 				if (event.isDataFlavorSupported(mapObjectFlavor))
 				{

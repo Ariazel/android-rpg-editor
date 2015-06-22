@@ -1,18 +1,17 @@
 package cz.cuni.mff.rpgeditor.game;
 
-import java.awt.image.BufferedImage;
-
 
 /**
  * Trida reprezentujici nepritele, postavu utocici na hrace.
  */
 public class Enemy extends MovingObject
 {
+	private static final long serialVersionUID = 1L;
 	int hp, speed; // TODO: dalsi vlastnosti + skripty utoku
 	boolean is_alive;
 	
-	public Enemy(BufferedImage[] graphics)
+	public Enemy(String graphics_filepath)
 	{
-		super(graphics);
+		super(graphics_filepath);
 	}
 }

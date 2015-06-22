@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -36,11 +37,13 @@ public class ActionController
 
 	void addAction(Reversible a)
 	{
+		// pokud je index uprostred listu akci, akce za
+		// posledni se pridanim nove akce ztrati
 		if (lastActions.size() != index)
 			lastActions = new ArrayList<Reversible>(
 					lastActions.subList(0, index));
 
-		if (index == 100)
+		if (index == 100)	// jde se vratit maximalne o 100 kroku zpet
 			lastActions.remove(0);
 		else
 			++index;
@@ -54,6 +57,12 @@ public class ActionController
 		--index;
 	}
 
+	boolean isInSavedState()
+	{	// mapa nebyla od nacteni upravena
+		// TODO: lepsi urceni uprav v mape bez ztraty poslednich akci k vraceni
+		return index == 0;
+	}
+	
 
 	void undoAction()
 	{
@@ -205,7 +214,7 @@ public class ActionController
 					return;
 
 				Map newMap = new Map(nameString, widthNum, heightNum);
-				Main.gui.mapTabbedPane.add(newMap);
+				Main.gui.mapTabbedPane.add(new MapPanel(newMap));
 				Main.gui.mapTabbedPane.setSelectedIndex(Main.gui.mapTabbedPane.getTabCount() - 1);
 				//TODO: New map prida tab, new game vymeni stare taby za jeden novy
 //				Main.gui.mapPanel.currentMap = new cz.cuni.mff.rpgeditor.game.Map(Integer
@@ -244,14 +253,14 @@ public class ActionController
 	 * o strukture souboru jsou u ukladani mapy.
 	 * @param filepath Cesta k souboru s mapou.
 	 */
-	static void openMap(File f)
+	static MapPanel openMap(File f)
 	{
 		String filepath = f.getAbsolutePath();
 		
 		if (!filepath.endsWith(".rpm"))
 		{	// soubor nema spravnou koncovku
 			System.err.println("Chosen file is not a map file.");
-			return;
+			return null;
 		}
 		
 		ObjectInputStream object_in = null;
@@ -267,6 +276,7 @@ public class ActionController
 			int height = object_in.readInt();
 			
 			Map map = new Map(map_name, width, height);
+			map.filepath = filepath;
 			
 			int[][] object_ids = new int[width][height];
 			
@@ -306,18 +316,38 @@ public class ActionController
 			{	// konec mapy/zacatek objektu je oznaceny pomoci max int
 				throw new IOException("Inconsistent file: " + f.getAbsolutePath());
 			}
-						
+			
 			List<MapObject> stationary_objects = new ArrayList<>();
 			for (int i = 0; i < max_stationary_id; ++i)
 			{
-				stationary_objects.add((MapObject)object_in.readObject());
+				MapObject so = (MapObject)object_in.readObject();
+				so.load();	// nacteni transient parametru
+				stationary_objects.add(so);
+			}
+			
+			if (object_in.readInt() != Integer.MAX_VALUE)
+			{	// konec stojicich objektu je oznaceny pomoci max int
+				throw new IOException("Inconsistent file: " + f.getAbsolutePath());
 			}
 			
 			List<MapObject> moving_objects = new ArrayList<>();
-			for (int i = 0; i < max_moving_id; ++i)
-			{
-				moving_objects.add((MapObject)object_in.readObject());
+			for (int i = 0; i <= max_moving_id; ++i)
+			{	// narozdil od stojicich objektu jsou pohyblive objekty cislovane od 0
+				MapObject mo = (MapObject)object_in.readObject();
+				mo.load();	// nacteni transient parametru
+				moving_objects.add(mo);
 			}
+			
+			if (object_in.readInt() != Integer.MAX_VALUE)
+			{	// konec pohybujicich se objektu je oznaceny pomoci max int
+				throw new IOException("Inconsistent file: " + f.getAbsolutePath());
+			}
+			
+			// KONEC CTENI SOUBORU, ZBYVA PRIDAT OBJEKTY NA MAPU
+			
+			MapPanel panel = new MapPanel(map);
+			// je potreba pracovat s panelem, aby objekty
+			// po vlozeni byly klikatelne
 			
 			for (int i = 0; i < width; ++i)
 			{
@@ -330,24 +360,27 @@ public class ActionController
 					int object_index = object_ids[i][j] & 0x003FFFFF;	// zbylych 22 bitu je poradi v listu
 										
 					if (object_type == 0)	// na policku je stojici objekt
-						map.addMapObject(i, j, stationary_objects.get(object_index - 1));	// stojici objekty jsou cislovane od 1
+						panel.addMapObject(new Point(i, j), stationary_objects.get(object_index - 1));	// stojici objekty jsou cislovane od 1
 					else if (object_type == 1)
-						map.addMapObject(i, j, moving_objects.get(object_index));
+						panel.addMapObject(new Point(i, j), moving_objects.get(object_index));
 				}
 			}
 			
-			Main.gui.mapTabbedPane.add(map);
-			Main.gui.mapTabbedPane.setSelectedIndex(Main.gui.mapTabbedPane.getTabCount() - 1);
+			return panel;
 		}
 		catch (IOException e)
 		{
 			System.err.println("Can't open map file: " + f.getAbsolutePath());
 			e.printStackTrace();
+			
+			return null;
 		} 
 		catch (ClassNotFoundException e)
 		{
 			System.err.println("Problem while loading objects from " + f.getAbsolutePath());
 			e.printStackTrace();
+			
+			return null;
 		}
 		finally
 		{
@@ -375,13 +408,13 @@ public class ActionController
 	{
 		if (map.filepath == null)
 		{
-			map.filepath = mapSaveDialog(map.name);
+			map.filepath = showMapSaveChooser();
 			
 			if (map.filepath == null)	// soubor nebyl vybran
 				return;
 		}
 		
-		File f = new File(map.filepath + "/" + map.name + ".rpm");
+		File f = new File(map.filepath);
 		ObjectOutputStream object_out = null;
 		
 		try
@@ -489,7 +522,7 @@ public class ActionController
 	
 	static void saveMapAs(Map map)
 	{
-		map.filepath = mapSaveDialog(map.name);
+		map.filepath = showMapSaveChooser();
 		saveMap(map);
 	}
 	
@@ -503,7 +536,7 @@ public class ActionController
 		//TODO
 	}
 	
-	static void mapOpenDialog()
+	static MapPanel showMapOpenChooser()
 	{
 		JFileChooser fc = new JFileChooser();
 		int return_val = fc.showOpenDialog(Main.gui.mapTabbedPane);
@@ -512,8 +545,10 @@ public class ActionController
 		{
 			File file = fc.getSelectedFile();
 			
-			openMap(file);
+			return openMap(file);
 		}
+		
+		return null;
 	}
 	
 	/**
@@ -521,7 +556,7 @@ public class ActionController
 	 * @param mapName Jmeno mapy.
 	 * @return Cesta, ve ktere ma byt ulozena mapa.
 	 */
-	static String mapSaveDialog(String name)
+	static String showMapSaveChooser()
 	{
 		JFileChooser fc = new JFileChooser();
 		
@@ -536,6 +571,11 @@ public class ActionController
 		{
 			return null;
 		}
+	}
+	
+	static void showMapSaveDialog(String map_name)
+	{
+		// TODO
 	}
 	
 	static void gameSaveDialog(String gameName)

@@ -10,7 +10,7 @@ public class MapScrollPane extends JScrollPane
 	
 	MapPanel mapPanel;
 	
-	MapScrollPane(Map map)
+	MapScrollPane(MapPanel map_panel)
 	{		
 		// kvuli minimape je potreba registrovat pohyb scrollbaru:
 		BoundedRangeModel horizontalModel = new DefaultBoundedRangeModel();
@@ -21,7 +21,17 @@ public class MapScrollPane extends JScrollPane
 		getVerticalScrollBar().setModel(verticalModel);
 		verticalModel.addChangeListener(new ScrollBarListener());
 
-		mapPanel = new MapPanel(map);
+		mapPanel = map_panel;
 		setViewportView(mapPanel);
+	}
+	
+	String getMapName()
+	{
+		return mapPanel.getMapName();
+	}
+	
+	boolean isMapChanged()
+	{
+		return !mapPanel.actionController.isInSavedState();
 	}
 }

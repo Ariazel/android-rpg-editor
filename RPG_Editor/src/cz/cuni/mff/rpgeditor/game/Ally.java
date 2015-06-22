@@ -1,6 +1,5 @@
 package cz.cuni.mff.rpgeditor.game;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 
@@ -10,11 +9,12 @@ import java.util.ArrayList;
  */
 public class Ally extends MovingObject
 {
+	private static final long serialVersionUID = 1L;
 	String name;
-	ArrayList<Quest> questsToGive;
-
-	public Ally(BufferedImage[] graphics)
+	ArrayList<Quest> questsToGive;	
+	
+	public Ally(String graphics_filepath)
 	{
-		super(graphics);
+		super(graphics_filepath);
 	}
 }

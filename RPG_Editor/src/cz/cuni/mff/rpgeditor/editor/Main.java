@@ -10,10 +10,5 @@ public class Main
 	{
 		gui = new GUI();
 		gui.createWindow();
-/*
-		Map map = new Map("jmeno", 100, 100);
-		// map.filepath = "C:/Users/Jura/Desktop";
-		map.filepath = "C:/Users/ji803208/Documents/moje";
-		ActionController.saveMap(map);
-*/	}
+	}
 }

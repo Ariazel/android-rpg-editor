@@ -1,13 +1,10 @@
 package cz.cuni.mff.rpgeditor.game;
 
-import java.awt.image.BufferedImage;
-import java.io.Serializable;
-
 
 /**
  * Pohybujici se objekt ve hre - spojenec/nepritel/past
  */
-public class MovingObject extends GameObject implements Serializable
+public class MovingObject extends GameObject
 {
 	private static final long serialVersionUID = 1L;
 	// souradnice pohybliveho objektu na mape
@@ -15,16 +12,17 @@ public class MovingObject extends GameObject implements Serializable
 	// objekt je v blizkosti hrace a tedy aktivni (hybe se/utoci)
 	boolean is_active;
 	// TODO: dva skripty, jeden na pohyb a jeden na utok, reference ulozene zde
-	
-	public MovingObject(BufferedImage[] graphics_frames)
+		
+	public MovingObject(String graphics_filepath)
 	{
-		super(graphics_frames);
+		super(graphics_filepath);
 		// TODO: look_game je jeden velky obrazek s jednotlivymi natocenimi a animacemi, rozdelit do frames
 	}
 	
 	@Override
-	public GameObject createDefaultCopy()
+	public Object clone()
 	{
-		return new MovingObject(graphics_frames);
+		return new MovingObject(graphics_filepath);
 	}
+
 }

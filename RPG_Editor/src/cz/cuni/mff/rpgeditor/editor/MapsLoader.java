@@ -17,9 +17,9 @@ public class MapsLoader
 	 * Otevre mapy zapsane v konfiguracnim souboru maps.cfg
 	 * @return List nactenych map.
 	 */
-	public static List<Map> loadMapsOnStartup()
+	public static List<MapPanel> loadMapsOnStartup()
 	{
-		List<Map> maps = new ArrayList<>();
+		List<MapPanel> maps = new ArrayList<>();
 		
 		BufferedReader br = null;
 		try
@@ -58,9 +58,8 @@ public class MapsLoader
 	 * @param f	Soubor s mapou.
 	 * @return	Mapa v editoru.
 	 */
-	public static Map loadMapFromFile(File f)
+	public static MapPanel loadMapFromFile(File f)
 	{
-		// TODO: nacitani map ze souboru
-		return new Map(f.getName(), 77, 153);
+		return ActionController.openMap(f);
 	}
 }

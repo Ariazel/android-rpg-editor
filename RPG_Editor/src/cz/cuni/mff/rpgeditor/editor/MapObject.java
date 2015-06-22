@@ -1,40 +1,45 @@
 package cz.cuni.mff.rpgeditor.editor;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+
+import javax.imageio.ImageIO;
 
 import cz.cuni.mff.rpgeditor.game.GameObject;
 
 public class MapObject implements Serializable
 {
-	private static final long serialVersionUID = 4L;
+	private static final long serialVersionUID = 1L;
 	
-	BufferedImage look_on_map;
+	transient BufferedImage look_on_map;
+	private String look_filepath;
 	GameObject game_object;
-	public int id = -1;
+	transient public int id = -1;
 	
-	public MapObject(BufferedImage look_on_map, GameObject game_object)
+	private static int current_id = 0;	// kazdy novy objekt dostane id + 1 predchoziho
+	
+	public MapObject(String look_filepath, GameObject game_object)
 	{
 		assert(game_object != null);
-		
-		this.look_on_map = look_on_map;
+
+		this.look_filepath = look_filepath;
 		this.game_object = game_object;
-	}
+		this.id = current_id++;
 		
-	void setId(int id)
-	{
-		this.id = id;
+		loadLook();
 	}
 	
-	boolean idIsSet()
+	private void loadLook()
 	{
-		if (id == -1)
+		try
 		{
-			return false;
+			look_on_map = ImageIO.read(new File(look_filepath));
 		}
-		else
+		catch (IOException e)
 		{
-			return true;
+			e.printStackTrace();
 		}
 	}
 	
@@ -42,8 +47,18 @@ public class MapObject implements Serializable
 	 * Vytvori kopii tohoto objektu. Je vyuzito pri pretazeni
 	 * objektu z praveho panelu na mapu.
 	 */
-	public MapObject createDefaultCopy()
-	{		
-		return new MapObject(look_on_map, game_object.createDefaultCopy());
+	@Override
+	public Object clone()
+	{
+		return new MapObject(look_filepath, (GameObject)game_object.clone());
+	}
+	
+	/**
+	 * Nacte obrazky objektu po nacteni ze souboru.
+	 */
+	void load()
+	{
+		loadLook();		
+		game_object.load();
 	}
 }

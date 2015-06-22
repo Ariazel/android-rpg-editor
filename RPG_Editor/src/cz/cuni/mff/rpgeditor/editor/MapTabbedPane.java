@@ -35,9 +35,9 @@ public class MapTabbedPane extends JTabbedPane
 	
 	MapTabbedPane()
 	{
-		List<Map> maps = MapsLoader.loadMapsOnStartup();
+		List<MapPanel> maps = MapsLoader.loadMapsOnStartup();
 		
-		for (Map map : maps)
+		for (MapPanel map : maps)
 		{
 			add(map);
 		}
@@ -49,6 +49,7 @@ public class MapTabbedPane extends JTabbedPane
 		else
 		{
 			currentTab = (MapScrollPane)getComponentAt(0);
+			setSelectedIndex(0);
 		}
 		
 		addChangeListener(new ChangeListener()
@@ -104,14 +105,26 @@ public class MapTabbedPane extends JTabbedPane
 		}
 	}
 	
-	public void add(Map map)
+	public void add(MapPanel map_panel)
 	{
-		MapScrollPane mapScrollPane = new MapScrollPane(map);
-		addTab(map.getName(), mapScrollPane);
+		for (int i = 0; i < getTabCount(); ++i)
+		{	// pokud panel se jmenem nove mapy existuje, vybere se a nic noveho se neotevre
+			String map_name_i = ((MapScrollPane)getComponentAt(i)).getMapName();
+			if (map_name_i.equals(map_panel.getMapName()))
+			{
+				setSelectedIndex(i);
+				return;
+			}
+		}
 		
-		int index = indexOfTab(map.getName());
-		setTabComponentAt(index, new ClosableTabComponent(map.getName()));
+		MapScrollPane mapScrollPane = new MapScrollPane(map_panel);
+		addTab(map_panel.getMapName(), mapScrollPane);
+		
+		int index = indexOfTab(map_panel.getMapName());
+		setTabComponentAt(index, new ClosableTabComponent(map_panel.getMapName()));
 		// prida tabu krizek k zavreni
+		
+		setSelectedIndex(getTabCount() - 1);	// vybere se nove otevrena mapa
 	}
 }
 
@@ -165,11 +178,16 @@ class ClosableTabComponent extends JPanel
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
-			{
-				ActionController.mapSaveDialog(name);
+			{				
+				int closed_tab_index = Main.gui.mapTabbedPane.indexOfTab(name);
+				MapScrollPane closed_tab = (MapScrollPane)getComponent(closed_tab_index);
 				
-				int indexOfClosedTab = Main.gui.mapTabbedPane.indexOfTab(name);
-				Main.gui.mapTabbedPane.remove(indexOfClosedTab);
+				if (closed_tab.isMapChanged())
+				{	// save dialog pouze v pripade, ze jsou na mape zmeny
+					ActionController.showMapSaveDialog(name);
+				}
+				
+				Main.gui.mapTabbedPane.remove(closed_tab_index);
 			}
 		});
 		
