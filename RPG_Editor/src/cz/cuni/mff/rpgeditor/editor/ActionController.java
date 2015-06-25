@@ -23,6 +23,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import cz.cuni.mff.rpgeditor.editor.MapTile.TerrainType;
 import cz.cuni.mff.rpgeditor.game.MovingObject;
@@ -539,6 +540,10 @@ public class ActionController
 	static MapPanel showMapOpenChooser()
 	{
 		JFileChooser fc = new JFileChooser();
+		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("RPG Editor Map File (.rpm)", "rpm");
+		fc.setFileFilter(filter);
+		
 		int return_val = fc.showOpenDialog(Main.gui.mapTabbedPane);
 		
 		if (return_val == JFileChooser.APPROVE_OPTION)
@@ -559,6 +564,9 @@ public class ActionController
 	static String showMapSaveChooser()
 	{
 		JFileChooser fc = new JFileChooser();
+		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("RPG Editor Map File (.rpm)", "rpm");
+		fc.setFileFilter(filter);
 		
 		int return_val = fc.showSaveDialog(Main.gui.mapTabbedPane);
 		

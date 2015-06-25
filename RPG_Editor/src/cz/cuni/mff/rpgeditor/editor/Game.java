@@ -1,8 +1,11 @@
-package cz.cuni.mff.rpgeditor.game;
+package cz.cuni.mff.rpgeditor.editor;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.zip.DataFormatException;
+
+import cz.cuni.mff.rpgeditor.game.Ally;
+import cz.cuni.mff.rpgeditor.game.Enemy;
+import cz.cuni.mff.rpgeditor.game.Map;
+import cz.cuni.mff.rpgeditor.game.Quest;
 
 
 /**
@@ -11,31 +14,19 @@ import java.util.zip.DataFormatException;
  */
 public class Game
 {
+	String game_filepath;
+	
 	public ArrayList<Map> maps;
 	public ArrayList<Ally> allies;
 	public ArrayList<Enemy> enemies;
 	public ArrayList<Quest> quests;
-
-	public static void main(String[] args) throws IOException,
-			DataFormatException
-	{
-		Game game = new Game();
-		Loader l = new Loader();
-		game.quests = l.loadQuests();
-		game.allies = l.loadAllies(game.quests);
-	}
 	
 	public Game()
 	{
+		// TODO
 		maps = new ArrayList<Map>();
 		allies = new ArrayList<Ally>();
 		enemies = new ArrayList<Enemy>();
 		quests = new ArrayList<Quest>();
-	}
-
-	public void convert()
-	{
-		Converter c = new Converter();
-		c.convert(this);
 	}
 }

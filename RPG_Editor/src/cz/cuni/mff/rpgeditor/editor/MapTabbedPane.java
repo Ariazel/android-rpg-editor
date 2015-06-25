@@ -179,9 +179,9 @@ class ClosableTabComponent extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{				
-				int closed_tab_index = Main.gui.mapTabbedPane.indexOfTab(name);
-				MapScrollPane closed_tab = (MapScrollPane)getComponent(closed_tab_index);
-				
+				int closed_tab_index = Main.gui.mapTabbedPane.indexOfTab(name);				
+				MapScrollPane closed_tab = (MapScrollPane)Main.gui.mapTabbedPane.getComponentAt(closed_tab_index);
+
 				if (closed_tab.isMapChanged())
 				{	// save dialog pouze v pripade, ze jsou na mape zmeny
 					ActionController.showMapSaveDialog(name);

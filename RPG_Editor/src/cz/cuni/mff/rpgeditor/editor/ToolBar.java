@@ -119,7 +119,7 @@ public class ToolBar extends JToolBar
 				{
 					public void actionPerformed(ActionEvent e)
 					{
-						Main.game.convert();
+						Converter.convert(Main.game);
 					}
 				});
 
@@ -141,8 +141,7 @@ public class ToolBar extends JToolBar
 		b.addActionListener(a);
 		add(b);
 	}
-
-
+	
 	
 	class ButtonToolTipper implements MouseListener
 	{

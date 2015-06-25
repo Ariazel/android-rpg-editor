@@ -4,7 +4,7 @@ package cz.cuni.mff.rpgeditor.editor;
 public class Main
 {
 	static GUI gui;
-	static cz.cuni.mff.rpgeditor.game.Game game;
+	static cz.cuni.mff.rpgeditor.editor.Game game;
 
 	public static void main(String[] args)
 	{
